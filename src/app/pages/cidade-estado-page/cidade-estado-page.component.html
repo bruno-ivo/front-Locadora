@@ -1,0 +1,16 @@
+<p>Esta é a minha pagina de componentes</p>
+
+<app-cidade-estado-component [estadoValue]="valorEstado"
+                             (estadoValueChange)="onMudouValorEstado($event)"
+                             [cidadeValue]="valorCidade"
+                             (cidadeValueChange)="onMudouValorCidade($event)"                             >
+
+</app-cidade-estado-component>
+<div>
+  <div class="current-value">
+    Estado Selecionado: <span>{{ valorEstado }}</span>
+  </div>
+  <div class="current-value">
+    Cidade Selecionada: <span>{{ valorCidade }}</span>
+  </div>
+</div>

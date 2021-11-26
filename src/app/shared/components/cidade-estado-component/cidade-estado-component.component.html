@@ -1,0 +1,32 @@
+<div class="dx-fieldset">
+  <div class="dx-field">
+    <div class="dx-field-label">Estado</div>
+    <div class="dx-field-value">
+      <dx-select-box [items]="estados"
+                      (onValueChanged)="onValueChangeEstado($event)"
+                      [displayExpr]="getDisplayEstado">
+
+<!--         <div *dxTemplate="let d of 'estadoCompleto'">
+          <div class="custom-item">
+            <div class="product-name">
+              <dx-text-box
+              class="product-name"
+              [value]="d.sigla && d.nome"
+            ></dx-text-box>
+            </div>
+          </div>
+        </div>
+ -->
+      </dx-select-box>
+    </div>
+  </div>
+  <div class="dx-field">
+    <div class="dx-field-label">Cidade</div>
+    <div class="dx-field-value">
+      <dx-select-box [items]="cidades"
+                     valueExpr="nome"
+                     valueChangeEvent="cidades"
+                     (onValueChanged)="onValueChangeCidade($event)"
+                     displayExpr="nome"></dx-select-box>
+    </div>
+  </div>
