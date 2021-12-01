@@ -1,5 +1,6 @@
-export class Cliente{
-  id: string = '';
-  nome: string = '';
-  codigo: string = '';
+export interface Cliente{
+  component: any;
+  id: number ;
+  nome: string;
+  codigo: string;
 }
