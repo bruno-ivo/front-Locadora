@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, NgModule, OnInit } from '@angular/core';
+import { Component, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import {
@@ -11,40 +11,43 @@ import {
   DevExtremeModule,
 } from 'devextreme-angular';
 import { Cliente } from 'src/app/shared/models/cliente';
-import { ClienteService } from 'src/app/shared/services/cliente.service';
+import { Change, ClienteService } from 'src/app/shared/services/cliente.service';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cliente-page',
   templateUrl: './cliente-page.component.html',
   styleUrls: ['./cliente-page.component.scss'],
 })
-export class ClientePageComponent implements OnInit {
-  clientes: Cliente[] = [];
+export class ClientePageComponent implements OnInit, OnDestroy {
+  ordersSubscription!: Subscription;
 
-  /*
+  clientes$: Observable<any> = new Observable<Cliente[]> ();
+
   changes: Change<Cliente>[] = [];
-  ordersSubscription: Subscription = new Subscription;
 
-  clientes$: Observable<Cliente[]> = new Observable<Cliente[]> ();
+  isLoading = false;
+
+  clientes: Cliente[] = [];
+  /*
+
 
 */
 
-  isLoading = false;
 
   //editRowKey?: number| undefined;
 
   constructor(private clienteService: ClienteService) {}
 
   ngOnInit(): void {
-    this.getClientes();
+    //this.getClientes();
 
-    //this.clientes$ = this.clienteService.listarCLientes();
+    this.clientes$ = this.clienteService.listarCLientes();
 
-    /*     this.isLoading = false;
+    this.isLoading = true;
     this.ordersSubscription = this.clientes$.subscribe((): void => {
       this.isLoading = false;
-      this.clientes$
-    }); */
+    });
   }
 
   getClientes() {
@@ -53,35 +56,40 @@ export class ClientePageComponent implements OnInit {
     });
   }
 
-  /*   get changesText(): string {
+    get changesText(): string {
     return JSON.stringify(this.changes.map((change) => ({
       type: change.type,
       key: change.type !== 'insert' ? change.key : undefined,
       data: change.data,
     })), null, ' ');
-  } */
+  }
 
   onSaving(event: any) {
     //debugger;
     const change = event.changes[0];
 
     if (change) {
-      event.cancel = false;
+      event.cancel = true;
       event.promise = this.processSaving(change);
       console.log(event.changes);
     }
   }
 
-  async processSaving(change: any) {
+  async processSaving(change: Change<Cliente>) {
     this.isLoading = true;
 
     try {
-      await this.clienteService.salvarAlteracoes(change).toPromise();
+      await this.clienteService.salvarAlteracoes(change);
+      this.changes = [];
     } finally {
       this.isLoading = false;
-      this.getClientes();
+      //this.getClientes();
       //this.router.navigate(['/clientes']);
     }
+  }
+
+  ngOnDestroy() {
+    this.ordersSubscription.unsubscribe();
   }
 
   /*
