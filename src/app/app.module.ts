@@ -20,8 +20,6 @@ import { FilmePageComponent } from './pages/filme-page/filme-page.component';
     AppComponent,
     CidadeEstadoPageComponent,
     LocadoraPageComponent,
-    FilmePageComponent,
-
   ],
   imports: [
     BrowserModule,
