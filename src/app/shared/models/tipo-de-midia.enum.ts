@@ -1,4 +1,4 @@
 export enum TipoDeMidiaEnum {
-  VHS = 'VHS',
-  DVD = 'DVD'
+  DVD = 'Dvd',
+  VHS = 'Vhs'
 }

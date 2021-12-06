@@ -15,6 +15,8 @@ import { LocadoraPageComponent } from './pages/locadora-page/locadora-page.compo
 import { ClientePageComponent } from './pages/cliente-page/cliente-page.component';
 import { FilmePageComponent } from './pages/filme-page/filme-page.component';
 
+import { FirstKeysToConsoleModule, FirstKeysToConsolePipe } from './shared/core/first-keys-to-console.pipe';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +36,11 @@ import { FilmePageComponent } from './pages/filme-page/filme-page.component';
     UnauthenticatedContentModule,
     AppRoutingModule,
     CidadeEstadoComponentModule,
-    HttpClientModule
+    HttpClientModule,
+    FirstKeysToConsoleModule,
+  ],
+  exports: [
+
   ],
   providers: [AuthService, ScreenService, AppInfoService, CidadeEstadoService],
   bootstrap: [AppComponent]

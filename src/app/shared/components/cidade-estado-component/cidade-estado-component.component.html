@@ -5,18 +5,6 @@
       <dx-select-box [items]="estados"
                       (onValueChanged)="onValueChangeEstado($event)"
                       [displayExpr]="getDisplayEstado">
-
-<!--         <div *dxTemplate="let d of 'estadoCompleto'">
-          <div class="custom-item">
-            <div class="product-name">
-              <dx-text-box
-              class="product-name"
-              [value]="d.sigla && d.nome"
-            ></dx-text-box>
-            </div>
-          </div>
-        </div>
- -->
       </dx-select-box>
     </div>
   </div>

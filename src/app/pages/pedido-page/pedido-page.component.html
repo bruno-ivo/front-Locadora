@@ -1,1 +1,62 @@
 <p>pedido-page works!</p>
+
+<div id="data-grid-demo">
+  <dx-data-grid
+    id="gridContainer"
+    [dataSource]="pedidos"
+    (onRowRemoving)="removerPedido($event)"
+    >
+    <dxo-editing
+      mode="popup"
+      [allowUpdating]="true"
+      [allowAdding]="true"
+      [allowDeleting]="true"
+    >
+      <dxo-popup
+        title="Criar/Editar um Pedido"
+        [showTitle]="true"
+        [width]="1000"
+        [height]="520"
+      >
+      </dxo-popup>
+      <dxo-form>
+        <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+          <dxi-item dataField="cliente" caption="Cliente">
+            <div class="dx-field">
+              <div class="dx-field-value">
+<!--                 <dx-select-box //[items]="clientes"
+                              //[displayExpr]="getDisplayCliente">
+                </dx-select-box> -->
+              </div>
+            </div>
+          </dxi-item>
+          <dxi-item dataField="dataDeLocacao" caption="Data de Locação"></dxi-item>
+          <dxi-item dataField="dataDeDevolucao"  caption="Data de Devolução"></dxi-item>
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+            <dxi-item dataField="itensDoPedido" caption="Carrinho de Filmes" [colSpan]="2"></dxi-item>
+        </dxi-item>
+      </dxo-form>
+    </dxo-editing>
+
+    <dxi-column dataField="id" caption="ID"></dxi-column>
+    <dxi-column dataField="cliente" [visible]="false"caption="Nome do Cliente"></dxi-column>
+    <dxi-column dataField="cliente.nome" caption="Nome do Cliente"></dxi-column>
+    <dxi-column dataField="dataDeLocacao"  dataType="date" caption="Data de Locação"></dxi-column>
+    <dxi-column dataField="dataDeDevolucao" dataType="date" caption="Data de Devolução"></dxi-column>
+    <dxi-column dataField="valorTotal" caption="Valor Total"></dxi-column>
+    <dxi-column dataField="itensDoPedido" [visible]="false" editCellTemplate="itensCellTemplate"></dxi-column>
+
+    <div *dxTemplate="let data of 'itensCellTemplate'">
+      <dx-data-grid [(dataSource)]="data.value">
+        <dxo-editing
+        mode="popup"
+        [allowUpdating]="true"
+        [allowAdding]="true"
+        [allowDeleting]="true"
+      ></dxo-editing>
+      </dx-data-grid>
+    </div>
+
+  </dx-data-grid>
+</div>

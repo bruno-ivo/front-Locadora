@@ -1,5 +1,4 @@
 import { Cliente } from 'src/app/shared/models/cliente';
-import { Filme } from './filme';
 import { ItensDoPedido } from './itens-do-pedido';
 
 export interface Pedido{
@@ -8,5 +7,5 @@ export interface Pedido{
   dataDeLocacao: Date;
   dataDeDevolucao: Date;
   ValorTotal: number;
-  itensDoPedido: ItensDoPedido;
+  itensDoPedido: ItensDoPedido[];
 }
