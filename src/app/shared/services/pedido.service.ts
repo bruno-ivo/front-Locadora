@@ -16,6 +16,10 @@ export class PedidoService {
     return this.http.get<Pedido[]>(`${this.APIPedido}`);
   }
 
+  public adicionarPedido(data: Pedido): Observable<Pedido>{
+    return this.http.post<Pedido>(`${this.APIPedido}`, data);
+  }
+
   public removerPedido(data: Pedido):Observable<any>{
     return this.http.delete<Pedido>(`${this.APIPedido}/${data.id}`);
   }

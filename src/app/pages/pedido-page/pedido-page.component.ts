@@ -8,7 +8,10 @@ import { Pedido } from 'src/app/shared/models/pedido';
 import { PedidoService } from '../../shared/services/pedido.service';
 import { Cliente } from '../../shared/models/cliente';
 import { ClienteService } from '../../shared/services/cliente.service';
-import { Observable } from 'rxjs';
+import { Filme } from 'src/app/shared/models/filme';
+import { FilmeService } from '../../shared/services/filme.service';
+import { ItensDoPedido } from '../../shared/models/itens-do-pedido';
+
 
 @Component({
   selector: 'app-pedido-page',
@@ -19,17 +22,38 @@ export class PedidoPageComponent implements OnInit {
 
   pedidos: Pedido[] = [];
 
-  //clientes: any = this.clienteService.listarCLientes().toPromise();
+  clientes: Cliente[] = [];
+
+  filmes: Filme[] = [];
+
+  itensPedido: ItensDoPedido[] = [];
 
   constructor(private pedidoService: PedidoService,
-              private clienteService: ClienteService) { }
+              private clienteService: ClienteService,
+              private filmeService: FilmeService) { }
 
   ngOnInit(): void {
     this.getPedidos();
+    this.getClientes();
+    this.getFilmes();
+  }
+
+  async getClientes(){
+   this.clientes = await this.clienteService.listarCLientes().toPromise();
+  }
+
+  async getFilmes(){
+    this.filmes = await this.filmeService.listarFilmes().toPromise();
   }
 
   async getPedidos(){
     this.pedidos = await this.pedidoService.listarPedidos().toPromise();
+  }
+
+  async adicionarPedido(e: any){
+    let pedidoNovo = await this.pedidoService.adicionarPedido(e.data).toPromise();
+    this.pedidos.push(pedidoNovo);
+    this.getPedidos();
   }
 
   async removerPedido(e: any){
@@ -42,6 +66,17 @@ export class PedidoPageComponent implements OnInit {
       return cliente.codigo + ' - ' + cliente.nome;
     }
     return cliente;
+  }
+
+  getDisplayFilme(filme: Filme){
+    if (filme) {
+      return filme.codigo + ' - ' + filme.nomeDoFilme + ' - ' + filme.tipo;
+    }
+    return filme;
+  }
+
+  adicionarLinhaDeItem(e: any){
+    console.log(e);
   }
 
 }

@@ -6,6 +6,6 @@ export interface Pedido{
   cliente: Cliente;
   dataDeLocacao: Date;
   dataDeDevolucao: Date;
-  ValorTotal: number;
+  valorTotal: number;
   itensDoPedido: ItensDoPedido[];
 }

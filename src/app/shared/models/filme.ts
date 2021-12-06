@@ -4,5 +4,5 @@ export interface Filme{
   nomeDoFilme: string;
   tipo: TipoDeMidiaEnum;
   codigo: string;
-  ValorDoFilme: number;
+  valorDoFilme: number;
 }

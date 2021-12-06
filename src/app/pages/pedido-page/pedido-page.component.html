@@ -4,8 +4,9 @@
   <dx-data-grid
     id="gridContainer"
     [dataSource]="pedidos"
+    (onRowInserting)="adicionarPedido($event)"
     (onRowRemoving)="removerPedido($event)"
-    >
+  >
     <dxo-editing
       mode="popup"
       [allowUpdating]="true"
@@ -21,42 +22,93 @@
       </dxo-popup>
       <dxo-form>
         <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
-          <dxi-item dataField="cliente" caption="Cliente">
-            <div class="dx-field">
-              <div class="dx-field-value">
-<!--                 <dx-select-box //[items]="clientes"
-                              //[displayExpr]="getDisplayCliente">
-                </dx-select-box> -->
-              </div>
-            </div>
-          </dxi-item>
-          <dxi-item dataField="dataDeLocacao" caption="Data de Locação"></dxi-item>
-          <dxi-item dataField="dataDeDevolucao"  caption="Data de Devolução"></dxi-item>
+          <dxi-item dataField="cliente" caption="Cliente"></dxi-item>
+          <dxi-item
+            dataField="dataDeLocacao"
+            caption="Data de Locação"
+          ></dxi-item>
+          <dxi-item
+            dataField="dataDeDevolucao"
+            caption="Data de Devolução"
+          ></dxi-item>
         </dxi-item>
         <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
-            <dxi-item dataField="itensDoPedido" caption="Carrinho de Filmes" [colSpan]="2"></dxi-item>
+          <dxi-item
+            dataField="itensDoPedido"
+            caption="Carrinho de Filmes"
+            [colSpan]="2"
+          ></dxi-item>
         </dxi-item>
       </dxo-form>
     </dxo-editing>
 
     <dxi-column dataField="id" caption="ID"></dxi-column>
-    <dxi-column dataField="cliente" [visible]="false"caption="Nome do Cliente"></dxi-column>
+    <dxi-column
+      dataField="cliente"
+      editCellTemplate="clientesCellTemplate"
+      [visible]="false"
+    ></dxi-column>
     <dxi-column dataField="cliente.nome" caption="Nome do Cliente"></dxi-column>
-    <dxi-column dataField="dataDeLocacao"  dataType="date" caption="Data de Locação"></dxi-column>
-    <dxi-column dataField="dataDeDevolucao" dataType="date" caption="Data de Devolução"></dxi-column>
-    <dxi-column dataField="valorTotal" caption="Valor Total"></dxi-column>
-    <dxi-column dataField="itensDoPedido" [visible]="false" editCellTemplate="itensCellTemplate"></dxi-column>
+    <dxi-column
+      dataField="dataDeLocacao"
+      dataType="date"
+      caption="Data de Locação"
+    ></dxi-column>
+    <dxi-column
+      dataField="dataDeDevolucao"
+      dataType="date"
+      caption="Data de Devolução"
+    ></dxi-column>
+    <dxi-column
+      dataField="valorTotal"
+      caption="Valor Total"
+      [format]="{
+        style: 'currency',
+        currency: 'BRL',
+        useGrouping: true,
+        minimumSignificantDigits: 3
+      }"
+    ></dxi-column>
+    <dxi-column
+      dataField="itensDoPedido"
+      [visible]="false"
+      editCellTemplate="itensCellTemplate"
+    ></dxi-column>
 
     <div *dxTemplate="let data of 'itensCellTemplate'">
-      <dx-data-grid [(dataSource)]="data.value">
+      <dx-data-grid
+      [dataSource]="itensPedido"
+      (onSaved)="adicionarLinhaDeItem($event)"
+      >
         <dxo-editing
-        mode="popup"
-        [allowUpdating]="true"
-        [allowAdding]="true"
-        [allowDeleting]="true"
-      ></dxo-editing>
+          mode="row"
+          [allowUpdating]="true"
+          [allowAdding]="true"
+          [allowDeleting]="true"
+          [useIcons]="true" >
+
+        </dxo-editing>
+
+        <dxi-column dataField="filme" editCellTemplate="filmesCellTemplate" ></dxi-column>
+        <dxi-column dataField="pedido" caption="Numero do pedido: " ></dxi-column>
+        <dxi-column dataField="quantidade" caption="Quantidade" ></dxi-column>
+        <dxi-column dataField="valorTotal" [allowEditing]="false" caption="Valor do pedido: " ></dxi-column>
+
+
+        <div *dxTemplate="let data of 'filmesCellTemplate'">
+          <dx-select-box
+            [items]="filmes"
+            [displayExpr]="getDisplayFilme"
+          ></dx-select-box>
+        </div>
       </dx-data-grid>
     </div>
 
+    <div *dxTemplate="let data of 'clientesCellTemplate'">
+      <dx-select-box
+        [items]="clientes"
+        [displayExpr]="getDisplayCliente"
+      ></dx-select-box>
+    </div>
   </dx-data-grid>
 </div>

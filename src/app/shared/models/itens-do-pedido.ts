@@ -5,5 +5,5 @@ export interface ItensDoPedido{
   pedido: number;
   quantidade: number;
   filme: Filme;
-  ValorTotal: number;
+  valorTotal: number;
 }
