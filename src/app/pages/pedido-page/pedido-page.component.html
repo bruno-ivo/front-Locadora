@@ -4,7 +4,10 @@
   <dx-data-grid
     id="gridContainer"
     [dataSource]="pedidos"
+    [showBorders]="true"
+    (onInitNewRow)="onInitNewRowItemPedido($event)"
     (onRowInserting)="adicionarPedido($event)"
+    (onRowUpdating)="editarPedido($event)"
     (onRowRemoving)="removerPedido($event)"
   >
     <dxo-editing
@@ -16,69 +19,45 @@
       <dxo-popup
         title="Criar/Editar um Pedido"
         [showTitle]="true"
-        [width]="1000"
-        [height]="520"
+        [width]="720"
+        [height]="510"
+
       >
       </dxo-popup>
       <dxo-form>
         <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
           <dxi-item dataField="cliente" caption="Cliente"></dxi-item>
-          <dxi-item
-            dataField="dataDeLocacao"
-            caption="Data de Locação"
-          ></dxi-item>
-          <dxi-item
-            dataField="dataDeDevolucao"
-            caption="Data de Devolução"
-          ></dxi-item>
+          <dxi-item dataField="dataDeLocacao" caption="Data de Locação"></dxi-item>
+          <dxi-item dataField="dataDeDevolucao" caption="Data de Devolução"></dxi-item>
         </dxi-item>
         <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
-          <dxi-item
-            dataField="itensDoPedido"
-            caption="Carrinho de Filmes"
-            [colSpan]="2"
-          ></dxi-item>
+          <dxi-item dataField="itensDoPedido" [colSpan]="2" ></dxi-item>
         </dxi-item>
       </dxo-form>
     </dxo-editing>
 
     <dxi-column dataField="id" caption="ID"></dxi-column>
-    <dxi-column
-      dataField="cliente"
-      editCellTemplate="clientesCellTemplate"
-      [visible]="false"
-    ></dxi-column>
-    <dxi-column dataField="cliente.nome" caption="Nome do Cliente"></dxi-column>
-    <dxi-column
-      dataField="dataDeLocacao"
-      dataType="date"
-      caption="Data de Locação"
-    ></dxi-column>
-    <dxi-column
-      dataField="dataDeDevolucao"
-      dataType="date"
-      caption="Data de Devolução"
-    ></dxi-column>
-    <dxi-column
-      dataField="valorTotal"
-      caption="Valor Total"
-      [format]="{
-        style: 'currency',
-        currency: 'BRL',
-        useGrouping: true,
-        minimumSignificantDigits: 3
-      }"
-    ></dxi-column>
-    <dxi-column
-      dataField="itensDoPedido"
-      [visible]="false"
-      editCellTemplate="itensCellTemplate"
-    ></dxi-column>
+    <dxi-column dataField="cliente" editCellTemplate="clientesEditCellTemplate" cellTemplate="clientesCellTemplate"></dxi-column>
+    <dxi-column dataField="dataDeLocacao" dataType="date" caption="Data de Locação"></dxi-column>
+    <dxi-column dataField="dataDeDevolucao" dataType="date" caption="Data de Devolução"></dxi-column>
+    <dxi-column dataField="valorTotal" caption="Valor Total" [format]="{ style: 'currency', currency: 'BRL',useGrouping: true, minimumSignificantDigits: 3}"></dxi-column>
+    <dxi-column dataField="itensDoPedido" [visible]="false" editCellTemplate="itensEditCellTemplate"></dxi-column>
 
-    <div *dxTemplate="let data of 'itensCellTemplate'">
+    <div *dxTemplate="let data of 'clientesCellTemplate'">{{ data.value ? data.value.nome: 'não achou o cliente' }}</div>
+
+    <div *dxTemplate="let data of 'clientesEditCellTemplate'">
+      <dx-select-box
+        [dataSource]="clientes"
+        [value]="data.value"
+        (valueChange)="valueChangeCliente($event, data)"
+        [displayExpr]="getDisplayCliente"
+       ></dx-select-box>
+    </div>
+
+    <div *dxTemplate="let data of 'itensEditCellTemplate'">
       <dx-data-grid
-      [dataSource]="itensPedido"
-      (onSaved)="adicionarLinhaDeItem($event)"
+      [dataSource]="data.value"
+      (onSaving)="adicionarLinhaNoGrid($event)"
       >
         <dxo-editing
           mode="row"
@@ -89,7 +68,7 @@
 
         </dxo-editing>
 
-        <dxi-column dataField="filme" editCellTemplate="filmesCellTemplate" ></dxi-column>
+        <dxi-column dataField="filme.nomeDoFilme"  caption="Filme" editCellTemplate="filmesCellTemplate" ></dxi-column>
         <dxi-column dataField="pedido" caption="Numero do pedido: " ></dxi-column>
         <dxi-column dataField="quantidade" caption="Quantidade" ></dxi-column>
         <dxi-column dataField="valorTotal" [allowEditing]="false" caption="Valor do pedido: " ></dxi-column>
@@ -97,18 +76,16 @@
 
         <div *dxTemplate="let data of 'filmesCellTemplate'">
           <dx-select-box
-            [items]="filmes"
-            [displayExpr]="getDisplayFilme"
+          [items]="filmes"
+          [displayExpr]="getDisplayFilme"
+          (valueChange)="valueChangeFilme($event, data)"
           ></dx-select-box>
         </div>
       </dx-data-grid>
     </div>
 
-    <div *dxTemplate="let data of 'clientesCellTemplate'">
-      <dx-select-box
-        [items]="clientes"
-        [displayExpr]="getDisplayCliente"
-      ></dx-select-box>
-    </div>
+
   </dx-data-grid>
 </div>
+
+<!-- (onSaving)="adicionarClienteNoGrid($event)" -->

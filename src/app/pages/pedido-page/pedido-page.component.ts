@@ -28,6 +28,7 @@ export class PedidoPageComponent implements OnInit {
 
   itensPedido: ItensDoPedido[] = [];
 
+
   constructor(private pedidoService: PedidoService,
               private clienteService: ClienteService,
               private filmeService: FilmeService) { }
@@ -50,10 +51,20 @@ export class PedidoPageComponent implements OnInit {
     this.pedidos = await this.pedidoService.listarPedidos().toPromise();
   }
 
-  async adicionarPedido(e: any){
-    let pedidoNovo = await this.pedidoService.adicionarPedido(e.data).toPromise();
-    this.pedidos.push(pedidoNovo);
-    this.getPedidos();
+  async adicionarPedido(event: any){
+    let dados = event.data;
+    dados.ValorTotal = 0;
+    console.log(dados);
+    const pedidoNovo = await this.pedidoService.adicionarPedido(dados).toPromise();
+  /*    this.pedidos.forEach(() =>  {
+      event.data.valorTotal = event.data.valorTotal + event.data.itensDoPedido.valorTotal;
+    }); */
+
+    //this.getPedidos();
+  }
+
+  async editarPedido(e: any){
+
   }
 
   async removerPedido(e: any){
@@ -63,20 +74,45 @@ export class PedidoPageComponent implements OnInit {
 
   getDisplayCliente(cliente: Cliente){
     if (cliente) {
-      return cliente.codigo + ' - ' + cliente.nome;
+      return cliente.codigoDoCliente + ' - ' + cliente.nome;
     }
     return cliente;
   }
 
   getDisplayFilme(filme: Filme){
     if (filme) {
-      return filme.codigo + ' - ' + filme.nomeDoFilme + ' - ' + filme.tipo;
+      return filme.codigoDoFilme + ' - ' + filme.nomeDoFilme + ' - ' + filme.tipo;
     }
     return filme;
   }
 
-  adicionarLinhaDeItem(e: any){
-    console.log(e);
+  adicionarLinhaNoGrid(e: any){
+    let item = e.changes[0];
+    if(item.type=='insert'){
+      item.data.valorTotal = item.data.quantidade*item.data.filme.valorDoFilme;
+    }
+    else if(item.type=='update' && item.data.quantidade){
+      item.data.valorTotal = item.data.quantidade*item.key.filme.valorDoFilme;
+    }
+  }
+
+  valueChangeFilme(event: any, data: any){
+    data.data.filme = event;
+    event = new Filme();
+    console.log(event);
+  }
+
+  valueChangeCliente(event: any, data:any){
+    data.data.cliente = event;
+    event = new Cliente();
+    console.log(event);
+
+  }
+
+  onInitNewRowItemPedido(event: any){
+    if(!event.data.itensDoPedido){
+      event.data.itensDoPedido = new Array<ItensDoPedido>();
+    }
   }
 
 }
@@ -96,3 +132,37 @@ export class PedidoPageComponent implements OnInit {
   exports: [PedidoPageComponent],
 })
 export class PedidoPageComponentModule {}
+
+/*     let itensDoPedido = new ItensDoPedido();
+
+itensDoPedido.pedido = e.data.pedido;
+itensDoPedido.quantidade =  e.data.quantidade;
+itensDoPedido.filme.nomeDoFilme =  e.data.filme.nomeDoFilme;
+itensDoPedido.filme.tipo =  e.data.filme.tipo;
+itensDoPedido.filme.codigo =  e.data.filme.codigo;
+itensDoPedido.filme.valorDoFilme =  e.data.filme.valorDoFilme;
+itensDoPedido.valorTotal =  e.data.filme.valorDoFilme * e.data.quantidade;
+
+e.push(this.itensPedido); */
+
+
+
+
+/*     data.data.itemPedido = e;
+let item = new ItensDoPedido();
+item.id = e
+item.filme = e;
+item.pedido = e;
+item.quantidade = e;
+item.valorTotal = e;
+
+console.log(item);
+
+
+this.itensPedido.push(item);
+*/
+//item.quantidade =  e.data.quantidade;
+//item.id = e.change.id;
+//item.valorTotal = item.filme.valorDoFilme * e.change.data.quantidade;
+// data.data.valorDoFilme = item.filme.valorDoFilme;
+//console.log(e);

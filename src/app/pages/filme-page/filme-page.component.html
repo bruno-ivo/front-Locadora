@@ -24,7 +24,7 @@
       <dxo-form>
         <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
           <dxi-item dataField="nomeDoFilme" caption="Titulo"></dxi-item>
-          <dxi-item dataField="codigo" caption="Código"></dxi-item>
+          <dxi-item dataField="codigoDoFilme" caption="Código"></dxi-item>
           <dxi-item dataField="tipo" caption="Tipo de Midia"></dxi-item>
           <dxi-item dataField="valorDoFilme" caption="Valor do Filme" ></dxi-item>
         </dxi-item>
@@ -33,11 +33,11 @@
 
     <dxi-column dataField="id" caption="ID"></dxi-column>
     <dxi-column dataField="nomeDoFilme" caption="Titulo"></dxi-column>
-    <dxi-column dataField="codigo" caption="Código"></dxi-column>
-    <dxi-column dataField="tipo" caption="Tipo de Midia" editCellTemplate="tipoEditCellTemplate"></dxi-column>
+    <dxi-column dataField="codigoDoFilme" caption="Código"></dxi-column>
+    <dxi-column dataField="tipo" caption="Tipo de Midia"></dxi-column>
     <dxi-column dataField="valorDoFilme" caption="Valor do Filme" [format]="{ style: 'currency', currency: 'BRL', useGrouping: true, minimumSignificantDigits: 3 }"></dxi-column>
 
-    <div *dxTemplate="let data of 'tipoEditCellTemplate'">
+<!--     <div *dxTemplate="let data of 'tipoEditCellTemplate'">
       <div class="dx-field">
         <div class="dx-field-value">
           <dx-select-box
@@ -48,7 +48,7 @@
         </div>
       </div>
 
-    </div>
+    </div> -->
 
 
   </dx-data-grid>

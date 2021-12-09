@@ -1,9 +1,9 @@
 import { Filme } from './filme';
 
-export interface ItensDoPedido{
-  id: number ;
-  pedido: number;
-  quantidade: number;
-  filme: Filme;
-  valorTotal: number;
+export class ItensDoPedido{
+  id!: number ;
+  pedido!: number;
+  quantidade!: number;
+  filme!: Filme;
+  valorTotal!: number;
 }
