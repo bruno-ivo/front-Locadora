@@ -10,7 +10,8 @@ import { Cliente } from '../../shared/models/cliente';
 import { ClienteService } from '../../shared/services/cliente.service';
 import { Filme } from 'src/app/shared/models/filme';
 import { FilmeService } from '../../shared/services/filme.service';
-import { ItensDoPedido } from '../../shared/models/itens-do-pedido';
+import { ItemPedido } from '../../shared/models/itens-do-pedido';
+import applyChanges from 'devextreme/data/apply_changes';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class PedidoPageComponent implements OnInit {
 
   filmes: Filme[] = [];
 
-  itensPedido: ItensDoPedido[] = [];
+  itensPedido: ItemPedido[] = [];
 
 
   constructor(private pedidoService: PedidoService,
@@ -52,23 +53,23 @@ export class PedidoPageComponent implements OnInit {
   }
 
   async adicionarPedido(event: any){
-    let dados = event.data;
-    dados.ValorTotal = 0;
+    let dados: Pedido = event.data;
+    dados.valorTotal = 0;
     console.log(dados);
     const pedidoNovo = await this.pedidoService.adicionarPedido(dados).toPromise();
-  /*    this.pedidos.forEach(() =>  {
-      event.data.valorTotal = event.data.valorTotal + event.data.itensDoPedido.valorTotal;
-    }); */
-
-    //this.getPedidos();
+    this.pedidos = applyChanges(this.pedidos, [pedidoNovo], {keyExpr: 'id'});
+    this.getPedidos();
   }
 
   async editarPedido(e: any){
-
+    e.data = Object.assign(e.oldData, e.newData);
+    const pedidoAlterado = await this.pedidoService.atualizarPedido(e.data).toPromise();
+    this.pedidos.push(pedidoAlterado);
+    this.getPedidos();
   }
 
   async removerPedido(e: any){
-   this.pedidos =  await this.pedidoService.removerPedido(e.key.id).toPromise();
+   this.pedidos =  await this.pedidoService.removerPedido(e.key).toPromise();
    this.getPedidos();
   }
 
@@ -86,32 +87,38 @@ export class PedidoPageComponent implements OnInit {
     return filme;
   }
 
-  adicionarLinhaNoGrid(e: any){
-    let item = e.changes[0];
-    if(item.type=='insert'){
-      item.data.valorTotal = item.data.quantidade*item.data.filme.valorDoFilme;
+  adicionarLinhaNoGrid(event: any, data: any){
+    for(let item of event.changes){
+      if(item.type=='insert'){
+        item.data.valorTotal = item.data.quantidade*item.data.filme.valorDoFilme;
+        console.log(item.data.valorTotal);
+      }
+      else if(item.type=='update'){
+        item.data = Object.assign(event.key, event.data);
+        item.data.valorTotal = item.data.quantidade*item.key.filme.valorDoFilme;
+        data.value = applyChanges(data.value, [item.data], {keyExpr: 'id'});
+        console.log(item.data.valorTotal);
+
+      }
     }
-    else if(item.type=='update' && item.data.quantidade){
-      item.data.valorTotal = item.data.quantidade*item.key.filme.valorDoFilme;
-    }
+
+    data.setValue(data.value);
   }
 
   valueChangeFilme(event: any, data: any){
     data.data.filme = event;
     event = new Filme();
     console.log(event);
+    data.setValue(this.filmes.find(x => x.id == event));
   }
 
   valueChangeCliente(event: any, data:any){
-    data.data.cliente = event;
-    event = new Cliente();
-    console.log(event);
-
+    data.setValue(this.clientes.find(x => x.id == event));
   }
 
   onInitNewRowItemPedido(event: any){
     if(!event.data.itensDoPedido){
-      event.data.itensDoPedido = new Array<ItensDoPedido>();
+      event.data.itensDoPedido = new Array<ItemPedido>();
     }
   }
 

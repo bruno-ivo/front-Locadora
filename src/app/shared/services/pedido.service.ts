@@ -20,6 +20,10 @@ export class PedidoService {
     return this.http.post<Pedido>(`${this.APIPedido}`, data);
   }
 
+  public atualizarPedido(data: Pedido): Observable<Pedido>{
+    return this.http.put<Pedido>(`${this.APIPedido}/${data.id}`, data);
+  }
+
   public removerPedido(data: Pedido):Observable<any>{
     return this.http.delete<Pedido>(`${this.APIPedido}/${data.id}`);
   }

@@ -1,5 +1,5 @@
 import { Cliente } from 'src/app/shared/models/cliente';
-import { ItensDoPedido } from './itens-do-pedido';
+import { ItemPedido } from './itens-do-pedido';
 
 export class Pedido{
   id!: number ;
@@ -7,5 +7,5 @@ export class Pedido{
   dataDeLocacao!: Date;
   dataDeDevolucao!: Date;
   valorTotal!: number;
-  itensDoPedido!: ItensDoPedido[];
+  itensDoPedido!: ItemPedido[];
 }

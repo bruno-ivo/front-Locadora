@@ -5,6 +5,7 @@
     id="gridContainer"
     [dataSource]="pedidos"
     [showBorders]="true"
+    [twoWayBindingEnabled]="true"
     (onInitNewRow)="onInitNewRowItemPedido($event)"
     (onRowInserting)="adicionarPedido($event)"
     (onRowUpdating)="editarPedido($event)"
@@ -46,21 +47,22 @@
     <div *dxTemplate="let data of 'clientesCellTemplate'">{{ data.value ? data.value.nome: 'não achou o cliente' }}</div>
 
     <div *dxTemplate="let data of 'clientesEditCellTemplate'">
-      <dx-select-box
-        [dataSource]="clientes"
-        [value]="data.value"
-        (valueChange)="valueChangeCliente($event, data)"
-        [displayExpr]="getDisplayCliente"
+      <dx-select-box [items]="clientes"
+                      valueExpr="id"
+                      [value]="data.value ? data.value.id : 0"
+                      (valueChange)="valueChangeCliente($event, data)"
+                      [displayExpr]="getDisplayCliente"
        ></dx-select-box>
     </div>
 
     <div *dxTemplate="let data of 'itensEditCellTemplate'">
       <dx-data-grid
-      [dataSource]="data.value"
-      (onSaving)="adicionarLinhaNoGrid($event)"
+        [dataSource]="data.value"
+        (onSaving)="adicionarLinhaNoGrid($event, data)"
       >
         <dxo-editing
           mode="row"
+          select
           [allowUpdating]="true"
           [allowAdding]="true"
           [allowDeleting]="true"
@@ -68,17 +70,19 @@
 
         </dxo-editing>
 
-        <dxi-column dataField="filme.nomeDoFilme"  caption="Filme" editCellTemplate="filmesCellTemplate" ></dxi-column>
-        <dxi-column dataField="pedido" caption="Numero do pedido: " ></dxi-column>
+        <dxi-column dataField="filme"  caption="Filme" cellTemplate="filmesCellTemplate" editCellTemplate="filmesEditCellTemplate" ></dxi-column>
         <dxi-column dataField="quantidade" caption="Quantidade" ></dxi-column>
         <dxi-column dataField="valorTotal" [allowEditing]="false" caption="Valor do pedido: " ></dxi-column>
 
 
-        <div *dxTemplate="let data of 'filmesCellTemplate'">
+        <div *dxTemplate="let data of 'filmesCellTemplate'">{{ data.value ? data.value.nomeDoFilme: 'não achou o filme' }}</div>
+
+        <div *dxTemplate="let data of 'filmesEditCellTemplate'">
           <dx-select-box
           [items]="filmes"
-          [displayExpr]="getDisplayFilme"
+          [value]="data.value ? data.value : 0"
           (valueChange)="valueChangeFilme($event, data)"
+          [displayExpr]="getDisplayFilme"
           ></dx-select-box>
         </div>
       </dx-data-grid>
